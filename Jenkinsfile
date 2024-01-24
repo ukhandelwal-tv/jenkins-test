@@ -42,7 +42,7 @@ node {
 			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "sf project deploy start -u ${HUB_ORG}"
 			}else{
-                rmsg = bat returnStdout: true, script: "sfdx force:source:deploy --manifest manifest/. -u ${HUB_ORG}"
+                rmsg = bat returnStdout: true, script: "sfdx force:source:deploy --source-dir force-app  -u ${HUB_ORG}"
 			}
   
             printf rmsg
