@@ -54,28 +54,22 @@ node {
         //create scratch org
         stage('Create Test Scratch Org') {
             if(isUnix()){
-                rmsg = sh returnStdout: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias org4 --wait 10 --duration-days 1 SF_DISABLE_DNS_CHECK=true"
+                rmsg = sh returnStdout: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias Org5 --wait 10 --duration-days 1 SF_DISABLE_DNS_CHECK=true"
             }else{
-                rmsg = bat returnStdout: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias org4 --wait 10 --duration-days 1"
-                // v2 = bat returnStatus: true, script : "sf config set target-org org4"
+                rmsg = bat returnStdout: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias Org5 --wait 10 --duration-days 1"
+                // v2 = bat returnStatus: true, script : "sf config set target-org Org5"
             }
 
-            println('rmsg : ' + rmsg)
-            
-            if (rmsg != 0) {
-                error 'Salesforce test scratch org creation failed.'
-            }
-
-            println('rmsg : ' + rmsg)
+            println('rmsg : ' + rmsg);
         }
 
         // Deploy code to scratch org
 
         stage('Push To Test Scratch Org') {
             if(isUnix()){
-                rmsg1 = sh returnStdout: true, script: "sf project deploy start --target-org org4";
+                rmsg1 = sh returnStdout: true, script: "sf project deploy start --target-org Org5";
             }else{
-                rmsg1 = bat returnStdout: true, script: "sf project deploy start --target-org org4"
+                rmsg1 = bat returnStdout: true, script: "sf project deploy start --target-org Org5"
             }
 
             if (rmsg1 != 0) {
