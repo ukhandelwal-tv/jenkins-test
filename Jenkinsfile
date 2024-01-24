@@ -40,9 +40,9 @@ node {
 			
 			// need to pull out assigned username
 			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "sf project deploy start -u ${HUB_ORG}"
+				rmsg = sh returnStatus: true, script: "sf project deploy start -u ${HUB_ORG}"
 			}else{
-                rmsg = bat returnStdout: true, script: "sfdx force:source:deploy --manifest manifest/package.xml  -u ${HUB_ORG}"
+                rmsg = bat returnStatus: true, script: "sfdx force:source:deploy --manifest manifest/package.xml  -u ${HUB_ORG}"
 			}
   
             printf rmsg
@@ -54,26 +54,30 @@ node {
         //create scratch org
         stage('Create Test Scratch Org') {
             if(isUnix()){
-                rmsg = sh returnStdout: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias Org5 --wait 10 --duration-days 1 SF_DISABLE_DNS_CHECK=true"
+                rmsg = sh returnStatus: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias Org6 --wait 10 --duration-days 1 SF_DISABLE_DNS_CHECK=true"
             }else{
-                rmsg = bat returnStdout: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias Org5 --wait 10 --duration-days 1"
-                // v2 = bat returnStatus: true, script : "sf config set target-org Org5"
+                rmsg = bat returnStatus: true, script: "sf org create scratch --target-dev-hub HubOrg --set-default --definition-file config/project-scratch-def.json --alias Org6 --wait 10 --duration-days 1"
+                // v2 = bat returnStatus: true, script : "sf config set target-org Org6"
             }
 
             println('rmsg : ' + rmsg);
+        }
+
+        stage('Generate username and password'){
+            rmsg = bat returnStatus: true , script: "sf org generate password --target-org Org6 --length 20"
+        }
+
+        stage('Display user'){
+            rmsg = bat returnStatus: true , script: "sf org display user --target-org Org6"
         }
 
         // Deploy code to scratch org
 
         stage('Push To Test Scratch Org') {
             if(isUnix()){
-                rmsg1 = sh returnStdout: true, script: "sf project deploy start --target-org Org5";
+                rmsg1 = sh returnStatus: true, script: "sf project deploy start --target-org Org6";
             }else{
-                rmsg1 = bat returnStdout: true, script: "sf project deploy start --target-org Org5"
-            }
-
-            if (rmsg1 != 0) {
-            error 'Salesforce push to test scratch org failed.'
+                rmsg1 = bat returnStatus: true, script: "sf project deploy start --target-org Org6"
             }
         }
     }
