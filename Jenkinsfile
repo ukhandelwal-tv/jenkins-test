@@ -65,10 +65,14 @@ node {
 
         stage('Generate username and password'){
             rmsg = bat returnStatus: true , script: "sf org generate password --target-org Org6 --length 20"
+
+            rintln('rmsg : ' + rmsg);
         }
 
         stage('Display user'){
             rmsg = bat returnStatus: true , script: "sf org display user --target-org Org6"
+
+            rintln('rmsg : ' + rmsg);
         }
 
         // Deploy code to scratch org
@@ -79,6 +83,8 @@ node {
             }else{
                 rmsg1 = bat returnStatus: true, script: "sf project deploy start --target-org Org6"
             }
+
+            rintln('rmsg1 : ' + rmsg1);
         }
     }
 }
